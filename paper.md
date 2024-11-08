@@ -22,15 +22,37 @@ event: BH2024
 
 # Abstract
 
-...
+Write in the end
 
 # Introduction
 
-...
+Kryštof
 
 # Content
 
-...
+# DSW
+- what is DSW?
+- explain how the resources works together - what is what (no need to go deep in the DB dependencies, just the overview and how it is linked)
+
+# Problem Statement
+- explanation of the problem 
+- how it works now - manuall seeding (e.g. cretion of the recipes)
+- add diagram!
+
+# Our Approach
+(e.g. what we did)
+
+## Analysis
+- what needed to be done (take info from 01_Main as well)
+
+
+- dependencies, files - many diagrams!
+
+
+## Implementation
+- connection to database, s3
+- logic - like explain the idea in the code?
+- interfaces (cli, web app)
 
 # Conclusions and Future Steps
 
