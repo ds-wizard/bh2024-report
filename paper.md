@@ -22,7 +22,13 @@ event: BH2024
 
 # Abstract
 
-%% TODO Kryštof -  Write in the end
+This report provides an overview of our activities and accomplishments related to the creation of reusable RDM (Research Data Management) Planning Environments for trainings and workshops conducted during the ELIXIR BioHackathon Europe 2024. ELIXIR recognizes the critical role of effective data management planning in enabling sustainable and reproducible research outcomes. This effectiveness is achieved through the use of appropriate Data Management Planning tools, such as the Data Stewardship Wizard.
+
+However, using such tools to conduct effective Data Management Planning is not a trivial task. Therefore, ELIXIR also acknowledges the need to educate users at all levels—whether they are data stewards responsible for preparing the necessary steps to produce Data Management Plans or researchers tasked with providing project information and generating these plans.
+
+Training sessions play a vital role in equipping users with the necessary skills to effectively utilize these tools. They enhance the quality of Data Management Plans and empower users to confidently handle data management tasks. To support frequent trainings, it is essential to prepare accurate and comprehensive materials, including a tailored instance of the Data Stewardship Wizard. The goal of this project was to create a simple and clear method for preparing these training instances by populating them with appropriate data.
+
+The outcome of the BioHackathon project is a strong foundation for such a platform, which will be further developed and used in real-world training sessions.
 
 # Introduction
 
@@ -30,20 +36,40 @@ event: BH2024
 
 # Content
 
-# DSW
+## DSW
 %% TODO Kryštof - longer description of the tool, add maybe some diagram showing/explaining how it works together (the flow of creating DMP)
 
-Data Stewardship Wizard (DSW) is a comprehensive platform for RDM planning, offering a range of components that facilitate structured data management:
-- **Knowledge Models**: These are templates of RDM best practices and guidelines, central to each DSW instance.
-- **Document Templates**: These templates generate structured outputs, such as PDF plans or reports, derived from RDM plans.
-- **Questionnaires**: A questionnaire is a data structure that collects responses based on the knowledge model.
-- **Users and Locales**: The DSW instance also stores user profiles and localisation data for supporting multiple languages.
+The Data Stewardship Wizard (DSW) is a comprehensive platform for Research Data Management (RDM) planning. However, the DSW itself is just a platform. To be functional, it needs to be populated with resources. These resources complement each other and work together to create a Data Management Plan. Additionally, these resources can be shared across DSW instances. To prepare a training instance, it is necessary to import these resources into it:
 
-Each of these resources is stored in a relational database and may include assets stored in object storage (e.g., MinIO for S3-compatible storage). However, manually setting up these resources and resolving their interdependencies is challenging. For instance, knowledge models depend on user definitions, document templates, and questionnaire responses to operate cohesively. This complexity creates significant hurdles in replicating DSW setups, especially in training environments.
+- **Knowledge Models**: Templates of RDM best practices and guidelines that are essential for each DSW instance.  
+- **Document Templates**: Templates used to generate structured outputs, such as PDF plans or reports, derived from RDM plans. These can be linked to a specific Knowledge Model or even a particular version of it.  
+- **Questionnaires**: Data structures designed to collect responses based on the Knowledge Model.  
 
-# Data Seeder
+The DSW cannot function without these resources. Their relationships are as follows: A Questionnaire is created using a Knowledge Model. The Document Template is designed to be compatible with a Knowledge Model. Together, the Knowledge Model and Questionnaire form a Project. This Project can then utilize a Document Template, which transforms the content of the Project into a Document—the primary output of the Data Stewardship Wizard. See the following figure:
 
-%% TODO Kryštof - exaplin what it is, for what
+![Data Stewardship Wizard resources relations](/figures/dsw_diagram.png)
+
+Each of these resources is stored in a relational database and may include assets stored in object storage (e.g., MinIO for S3-compatible storage). However, manually setting up these resources and resolving their interdependencies can be challenging. For example, knowledge models rely on user definitions, document templates, and questionnaire responses to function cohesively. This complexity presents significant challenges when replicating DSW setups, particularly in training environments.
+
+To address this, we also need to introduce additional resources that, while not directly used to generate the Document, may serve as dependencies or play a supporting role in the overall process:
+
+- **Users**: A representation of a person within the system. They can have one of the following roles:
+  - **Administrator**: Manages the DSW instance; not relevant for this case.
+  - **Data Steward**: Prepares Knowledge Models and Document Templates for Researchers to use.
+  - **Researcher**: Answers all questions within a Questionnaire and uses Document Templates to generate their Documents.
+- **Locales**: Localizations to support multiple languages. This only affects the DSW UI.
+
+The actual work within DSW is divided in the following way:
+
+![Data Stewardship Wizard areas of responsibility](/figures/dsw_diagram_responsibilities.png)
+
+All these resources and their dependencies need to be transferred between instances to fill a training instance with the data necessary to conduct a training. This approach is useful not only for preparing before a training but also afterward, as there is no need to "clear" an instance of excess data created during a training. Instead, it is possible to simply delete everything and create a new instance. To import data into an instance, there is an existing tool, Data Seeder.
+
+## Data Seeder
+
+Data Seeder is a tool for seeding Data Stewardship Wizard (DSW) data. It is used to insert data into any DSW instance. In order for this to work, it is necessary to provide a recipe. The recipe is a collection of all the previously mentioned resources, which may also have various dependencies. Currently, all of this must be prepared manually.
+
+The goal of this project is to improve this process by creating an application that connects to an example or source instance of DSW, lists all available resources there, and enables the automatic creation of the recipe. This application would also automatically resolve all dependencies and include any dependent resources.
 
 # Problem Statement
 
@@ -58,7 +84,7 @@ Preparing data for the Data Seeder, referred to here as a content package, is cu
 
 Given the rising interest in DSW and the growing demand for training, this manual process is becoming increasingly unsustainable.
 
-To address these challenges, we developed a tool, seed-maker, that automates the creation of content packages, ready for use with the DSW Data Seeder in just minutes. This tool resolves dependencies, ensures all required resources are included and ordered correctly, and handles anonymisation where necessary.
+To address these challenges, we developed a tool, seed-maker, that automates the creation of content packages, ready for use with the DSW Data Seeder in just minutes. This tool resolves dependencies, ensures all required resources are included and ordered correctly, and handles anonymization where necessary.
 
 # Approach and Design
 
@@ -71,7 +97,7 @@ The workflow includes the following stages:
 1. **Component Selection**: Users are presented with a list of available components for selection, allowing flexibility in creating custom seeds.
 2. **Dependency Resolution**: The tool identifies dependencies among selected components and ensures correct import order and UUID handling.
 3. **S3 File Retrieval**: Necessary files from S3 are included in the final package, based on user selections and dependencies.
-3. **Packaging and Deployment**: The final seed recipe includes JSON file describing the order of seeding, SQL scripts, and data files organised into a directory structure, packaged as a ZIP file for easy distribution and deployment into the DSW Data Seeder.
+3. **Packaging and Deployment**: The final seed recipe includes JSON file describing the order of seeding, SQL scripts, and data files organized into a directory structure, packaged as a ZIP file for easy distribution and deployment into the DSW Data Seeder.
 
 ![User-Data Seed Maker interactions](/figures/path.jpg)
 
@@ -105,9 +131,9 @@ Below is an example of a JSON output listing available document resources for ex
 
 ### Dependency Resolution
 
-Dependencies between different content resources are a primary challenge we needed to address. Analysing these dependencies and relationships was essential, as shown in the diagram below. We mapped foreign keys to detect dependencies, which inform several key actions:
+Dependencies between different content resources are a primary challenge we needed to address. Analyzing these dependencies and relationships was essential, as shown in the diagram below. We mapped foreign keys to detect dependencies, which inform several key actions:
 
-1. **Adding content:** Sometimes, content must be included even if the user has not selected it for seeding. As illustrated in the diagram, many resources depend on others; for example, knowledge models may depend on a different instance of the same resource. Users are typically unaware of these dependencies, so they may not realise which content is necessary for functionality. To ensure a seamless experience, we automatically add any dependent resources without requiring user input.
+1. **Adding content:** Sometimes, content must be included even if the user has not selected it for seeding. As illustrated in the diagram, many resources depend on others; for example, knowledge models may depend on a different instance of the same resource. Users are typically unaware of these dependencies, so they may not realize which content is necessary for functionality. To ensure a seamless experience, we automatically add any dependent resources without requiring user input.
 
 2. **Insertion Order:** The sequence of data insertion is critical. For example, documents depend on both document templates and knowledge models, meaning that documents cannot be inserted without the necessary templates and models in place. Failing to insert in the correct order would cause a foreign key constraint violation in SQL. Thus, the tool ensures that inserts are ordered correctly based on dependencies and resource instances.
 
@@ -141,7 +167,7 @@ The final seed package, ready for input into the DSW Data Seeder, includes:
 
 * **JSON file** detailing the seeding order
 * **SQL scripts** with "INSERT" statements
-* **Organised data files** in a directory structure
+* **Organized data files** in a directory structure
 
 The package structure ensures correct alignment with dependency rules, facilitating seamless deployment.
 
@@ -155,7 +181,7 @@ Our solution uses PostgreSQL for database interactions and MinIO for S3-compatib
 Key functions include:
 - **UUID Management**: Generates and assigns UUIDs as necessary to maintain unique instance identifiers for each component.
 - **Dependency Resolution**: Ensures components with dependencies (e.g., knowledge models that rely on user definitions) are included in the correct sequence.
-- **Anonymisation and Data Transformation**: For questionnaire data, sensitive user information can be anonymised, and unique identifiers reassigned.
+- **Anonymization and Data Transformation**: For questionnaire data, sensitive user information can be anonymised, and unique identifiers reassigned.
 
 This modular structure allows support for diverse DSW configurations, enabling easy export from one instance and import into another.
 
@@ -187,8 +213,8 @@ The web app provides a simplified interface, allowing users to select resources 
 
 # Conclusions and Future Steps
 
-instance anonymiyation
-users annonymization - or do we add them? lets do annonym version now and then optionaly add the users etc
+instance anonymization
+users anonymization - or do we add them? lets do anonym version now and then optionally add the users etc
 correction of SQL
 responses extraction
 document_templates smt
