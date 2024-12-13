@@ -22,22 +22,17 @@ event: BH2024
 
 # Abstract
 
-This report provides an overview of our activities and accomplishments related to the creation of reusable RDM (Research Data Management) Planning Environments for trainings and workshops conducted during the ELIXIR BioHackathon Europe 2024. ELIXIR recognizes the critical role of effective data management planning in enabling sustainable and reproducible research outcomes. This effectiveness is achieved through the use of appropriate Data Management Planning tools, such as the Data Stewardship Wizard.
-
-However, using such tools to conduct effective Data Management Planning is not a trivial task. Therefore, ELIXIR also acknowledges the need to educate users at all levels—whether they are data stewards responsible for preparing the necessary steps to produce Data Management Plans or researchers tasked with providing project information and generating these plans.
-
-Training sessions play a vital role in equipping users with the necessary skills to effectively utilize these tools. They enhance the quality of Data Management Plans and empower users to confidently handle data management tasks. To support frequent trainings, it is essential to prepare accurate and comprehensive materials, including a tailored instance of the Data Stewardship Wizard. The goal of this project was to create a simple and clear method for preparing these training instances by populating them with appropriate data.
-
-The outcome of the BioHackathon project is a strong foundation for such a platform, which will be further developed and used in real-world training sessions.
+This report provides an overview of our activities and accomplishments related to the creation of reusable RDM (Research Data Management) Planning Environments for trainings and workshops conducted during the ELIXIR BioHackathon Europe 2024. ELIXIR recognizes the critical role of effective data management planning in enabling sustainable and reproducible research outcomes. This effectiveness is achieved through the use of appropriate Data Management Planning tools, such as the Data Stewardship Wizard. The Data Stewardship Wizard is used to conduct various trainings which require instance with data which are different for each training. Goal of this project was to provide easy and effective way to prepare "recipes" for DSW Data Seeder.
 
 # Introduction
 
-%% TODO Kryštof
+Using tools such as Data Stewardship Wizard to conduct effective Data Management Planning is not a trivial task. Therefore, ELIXIR acknowledges the need to educate users at all levels—whether they are data stewards responsible for preparing the necessary steps to produce Data Management Plans or researchers tasked with providing project information and generating these plans.
+
+Training sessions play a vital role in equipping users with the necessary skills to effectively utilize these tools. They enhance the quality of Data Management Plans and empower users to confidently handle data management tasks. To support frequent trainings, it is essential to prepare accurate and comprehensive materials, including a tailored instance of the Data Stewardship Wizard. The goal of this project was to create a simple and clear method for preparing these training instances by populating them with appropriate data.
 
 # Content
 
 ## DSW
-%% TODO Kryštof - longer description of the tool, add maybe some diagram showing/explaining how it works together (the flow of creating DMP)
 
 The Data Stewardship Wizard (DSW) is a comprehensive platform for Research Data Management (RDM) planning. However, the DSW itself is just a platform. To be functional, it needs to be populated with resources. These resources complement each other and work together to create a Data Management Plan. Additionally, these resources can be shared across DSW instances. To prepare a training instance, it is necessary to import these resources into it:
 
@@ -173,7 +168,6 @@ The package structure ensures correct alignment with dependency rules, facilitat
 
 ![Structure of the content package](/figures/package_content.jpg)
 
-
 ## Implementation Details
 
 Our solution uses PostgreSQL for database interactions and MinIO for S3-compatible object storage. Python was chosen as the primary language for its extensive libraries for database interaction, data manipulation, and API integration.
@@ -189,7 +183,6 @@ This modular structure allows support for diverse DSW configurations, enabling e
 
 The seed-maker tool offers both a command-line interface and a simplified web app for creating content packages.
 
-
 List available resources:
 
 ```
@@ -198,7 +191,6 @@ dsw-seed-maker list --resource-type "resource_type" --output_file "output_file"
 
 * resource_type can be any listable item (e.g., users, knowledge models).
 * output_file specifies the file to save the resource list.
-
 
 Create seed package:
 
@@ -213,12 +205,14 @@ The web app provides a simplified interface, allowing users to select resources 
 
 # Conclusions and Future Steps
 
-instance anonymization
-users anonymization - or do we add them? lets do anonym version now and then optionally add the users etc
-correction of SQL
-responses extraction
-document_templates smt
-logic for listing the dependencies only - for the web app
+There can be many different combinations and use cases for recipe creation, whether as part of training sessions or outside of them. The Data Seeder, along with the recipes enabled during this BioHackathon project, can also be used to transfer data seamlessly between different instances of the Data Stewardship Wizard. This presents an opportunity for further development of the Data Seed Maker. Several areas could benefit from improvements or additional features, such as various anonymization options for seeded data, more efficient resource extraction, and the ability to view dependencies in the web app.
+
+- **Instance Anonymization**: The ability to remove information identifying the instance from which the data was taken.
+- **Users Anonymization**: The ability to remove information about the users who performed various actions with the resources.
+- **Responses Extraction**: The ability to extract not only resources, such as Knowledge Models or Document Templates, but also responses from Projects.
+- **Logic for Listing Dependencies Only**: The ability to view the dependencies of a specific resource within the web app GUI.
+
+Overall, the work completed during the ELIXIR BioHackathon 2024 lays a strong foundation for the Seed Maker platform, which will be further developed and used in real-world training sessions. This will significantly reduce the tedious and repetitive work that, until now, had to be done before every training session and when moving resources between instances of the Data Stewardship Wizard.
 
 # Acknowledgements
 
