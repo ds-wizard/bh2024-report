@@ -26,15 +26,13 @@ This report provides an overview of our activities and accomplishments related t
 
 # Introduction
 
-Using tools such as Data Stewardship Wizard to conduct effective Data Management Planning is not a trivial task. Therefore, ELIXIR acknowledges the need to educate users at all levels—whether they are data stewards responsible for preparing the necessary steps to produce Data Management Plans or researchers tasked with providing project information and generating these plans.
+Using tools such as Data Stewardship Wizard (DSW, ds-wizard.org) to conduct effective Data Management Planning is not a trivial task. Therefore, ELIXIR acknowledges the need to educate users at all levels—whether they are data stewards responsible for preparing the necessary steps to produce Data Management Plans or researchers tasked with providing project information and generating these plans.
 
 Training sessions play a vital role in equipping users with the necessary skills to effectively utilize these tools. They enhance the quality of Data Management Plans and empower users to confidently handle data management tasks. To support frequent trainings, it is essential to prepare accurate and comprehensive materials, including a tailored instance of the Data Stewardship Wizard. The goal of this project was to create a simple and clear method for preparing these training instances by populating them with appropriate data.
 
-# Content
+## Data Stewardship Wizard
 
-## DSW
-
-The Data Stewardship Wizard (DSW) is a comprehensive platform for Research Data Management (RDM) planning. However, the DSW itself is just a platform. To be functional, it needs to be populated with resources. These resources complement each other and work together to create a Data Management Plan. Additionally, these resources can be shared across DSW instances. To prepare a training instance, it is necessary to import these resources into it:
+The Data Stewardship Wizard is a comprehensive platform for Research Data Management (RDM) planning. However, the DSW itself is just a platform. To be functional, it needs to be populated with resources. These resources complement each other and work together to create a Data Management Plan. Additionally, these resources can be shared across DSW instances. To prepare a training instance, it is necessary to import these resources into it:
 
 - **Knowledge Models**: Templates of RDM best practices and guidelines that are essential for each DSW instance.  
 - **Document Templates**: Templates used to generate structured outputs, such as PDF plans or reports, derived from RDM plans. These can be linked to a specific Knowledge Model or even a particular version of it.  
@@ -62,7 +60,7 @@ All these resources and their dependencies need to be transferred between instan
 
 ## Data Seeder
 
-Data Seeder is a tool for seeding Data Stewardship Wizard (DSW) data. It is used to insert data into any DSW instance. In order for this to work, it is necessary to provide a recipe. The recipe is a collection of all the previously mentioned resources, which may also have various dependencies. Currently, all of this must be prepared manually.
+[Data Seeder][data-seeder] is a tool for seeding Data Stewardship Wizard data. It is used to insert data into any DSW instance. In order for this to work, it is necessary to provide a recipe. The recipe is a collection of all the previously mentioned resources, which may also have various dependencies. Currently, all of this must be prepared manually.
 
 The goal of this project is to improve this process by creating an application that connects to an example or source instance of DSW, lists all available resources there, and enables the automatic creation of the recipe. This application would also automatically resolve all dependencies and include any dependent resources.
 
@@ -221,5 +219,6 @@ This work was done during the [BioHackathon Europe][biohack-europe] 2024 organiz
 # References
 
 [biohack-europe]: https://biohackathon-europe.org
+[data-seeder]: https://github.com/ds-wizard/engine-tools/tree/develop/packages/dsw-data-seeder
 [ds-wizard]: https://ds-wizard.org
 [elixir-tools-platform]: https://elixir-europe.org/platforms/tools
