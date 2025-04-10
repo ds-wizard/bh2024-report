@@ -1,0 +1,31 @@
+name: Build PDF
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Build PDF
+    runs-on: ubuntu-24.04
+
+    env:
+      IMAGE: mareksuchanek/bhxiv-gen-pdf:test
+      EVENT: BH21EU
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Pull Docker image
+      run: |
+        docker pull $IMAGE
+
+    - name: Generate PDF
+      run: |
+        docker run --rm -v $(pwd):/work -w /work $IMAGE gen-pdf /work $EVENT
+        ls -la
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: paper
+        path: paper.pdf
